@@ -45,6 +45,12 @@ def saveModel(model):
     return None
 
 
+def eval_metrics(y_true, y_pred):
+    accuracy = accuracy_score(y_true, y_pred)
+
+    return accuracy
+
+
 def main():
     train, test = loadData()
     xTrain, yTrain = splitData(train)
@@ -52,9 +58,15 @@ def main():
     xTrainEncoded, xTestEncoded = oneHotEncoder(xTrain, xTest)
     modelo = entrenarModelo(xTrainEncoded, yTrain)
     saveModel(modelo)
-    yPred = modelo.predict(xTestEncoded)
 
-    print(accuracy_score(yTest, yPred))
+    yPredTrain = modelo.predict(xTrainEncoded)
+    yPredTest = modelo.predict(xTestEncoded)
+
+    accuracy_train = eval_metrics(yTrain, yPredTrain)
+    accuracy_test = eval_metrics(yTest, yPredTest)
+
+    print(f"Train accuracy: {accuracy_train}")
+    print(f"Test accuracy: {accuracy_test}")
 
 
 main()
